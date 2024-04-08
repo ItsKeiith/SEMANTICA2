@@ -272,7 +272,7 @@ namespace Semantica
         // Requerimiento 2: Scanf -> scanf(cadena,&Identificador);
         private void Scanf(bool evalua)
         {
-            string nombre = getContenido();
+            string nombre;
             string? valorStr = "";
             float valor;
             match("scanf");
@@ -280,13 +280,14 @@ namespace Semantica
             match(Tipos.Cadena);
             match(",");
             match("&");
+            nombre = getContenido();
             match(Tipos.Identificador); //Req 1
             if (evalua)
             {
                 valorStr = Console.ReadLine();
-                if (!ExisteVariable(getContenido()))
+                if (!ExisteVariable(nombre))
                 {
-                    throw new Error("de sintaxis, la siguiente variable no está definida: " + getContenido(), log, linea);
+                    throw new Error("de sintaxis, la siguiente variable no está definida: " + nombre, log, linea);
                 }
                 if (float.TryParse(valorStr, out valor))
                 {
@@ -305,6 +306,7 @@ namespace Semantica
         {
             string nombre = getContenido();
             float valor = ValorVariable(nombre);
+            float valorExpresion = 0;
             if (!ExisteVariable(nombre))
             {
                 throw new Error("de sintaxis, la siguiente variable no está definida: " + nombre, log, linea);
@@ -313,51 +315,109 @@ namespace Semantica
             if (getClasificacion() == Tipos.IncrementoTermino)
             {
                 string operador = getContenido();
-                if (operador == "++")
+                switch (operador)
                 {
-                    match("++");
-                    valor++;
-                }
-                else if (operador == "--")
-                {
-                    match("--");
-                    valor--;
-                }
-                else
-                {
-                    Expresion();
-                    float valorExpresion = s.Pop();
-                    switch (operador)
-                    {
-                        case "+=":
+                    case "++":
+                        match("++");
+                        valor++;
+                        break;
+                    case "--":
+                        match("--");
+                        valor--;
+                        break;
+                    case "+=":
                         match(Tipos.IncrementoTermino);
+                        if (getClasificacion() == Tipos.Numero)
+                        {
+                            valorExpresion = float.Parse(getContenido());
+                            match(Tipos.Numero);
+                        }
+						else if (getClasificacion() == Tipos.Identificador){
+							valorExpresion = ValorVariable(getContenido());
+							match(Tipos.Identificador);
+						}
+						else {
+							Expresion();
+							valorExpresion = s.Pop();
+						}
                             valor += valorExpresion;
-                            break;
-                        case "-=":
-                        match(Tipos.IncrementoTermino);
-                            valor -= valorExpresion;
-                            break;
-                        case "*=":
-                        match(Tipos.IncrementoFactor);
-                            valor *= valorExpresion;
-                            break;
-                        case "/=":
-                        match(Tipos.IncrementoFactor);
-                            valor /= valorExpresion;
-                            break;
-                        case "%=":
-                        match(Tipos.IncrementoFactor);
-                            valor %= valorExpresion;
-                            break;
-                        default:
-                            Expresion();
-                            valor = s.Pop();
-                            break;
-                    }
+                        
+						break;
+                    case "-=":
+                        if (getClasificacion() == Tipos.Numero)
+                        {
+                            valorExpresion = float.Parse(getContenido());
+                            match(Tipos.Numero);
+                        }
+						else if (getClasificacion() == Tipos.Identificador){
+							valorExpresion = ValorVariable(getContenido());
+							match(Tipos.Identificador);
+						}
+						else {
+							Expresion();
+							valorExpresion = s.Pop();
+						}
+                        valor -= valorExpresion;
+                        break;
                 }
-                if (evalua)
+            }
+
+            else if (getClasificacion() == Tipos.IncrementoFactor)
+            {
+                string operador = getContenido();
+                switch (operador)
                 {
-                    ModificaValor(nombre, valor);
+                    case "*=":
+                        match(Tipos.IncrementoFactor);
+						if (getClasificacion() == Tipos.Numero)
+                        {
+                            valorExpresion = float.Parse(getContenido());
+                            match(Tipos.Numero);
+                        }
+						else if (getClasificacion() == Tipos.Identificador){
+							valorExpresion = ValorVariable(getContenido());
+							match(Tipos.Identificador);
+						}
+						else {
+							Expresion();
+							valorExpresion = s.Pop();
+						}
+                        valor *= valorExpresion;
+                        break;
+                    case "/=":
+                        match(Tipos.IncrementoFactor);
+						if (getClasificacion() == Tipos.Numero)
+                        {
+                            valorExpresion = float.Parse(getContenido());
+                            match(Tipos.Numero);
+                        }
+						else if (getClasificacion() == Tipos.Identificador){
+							valorExpresion = ValorVariable(getContenido());
+							match(Tipos.Identificador);
+						}
+						else {
+							Expresion();
+							valorExpresion = s.Pop();
+						}
+                        valor /= valorExpresion;
+                        break;
+                    case "%=":
+                        match(Tipos.IncrementoFactor);
+						if (getClasificacion() == Tipos.Numero)
+                        {
+                            valorExpresion = float.Parse(getContenido());
+                            match(Tipos.Numero);
+                        }
+						else if (getClasificacion() == Tipos.Identificador){
+							valorExpresion = ValorVariable(getContenido());
+							match(Tipos.Identificador);
+						}
+						else {
+							Expresion();
+							valorExpresion = s.Pop();
+						}
+                        valor %= valorExpresion;
+                        break;
                 }
             }
             else if (getContenido() == "=")
@@ -365,11 +425,6 @@ namespace Semantica
                 match("=");
                 Expresion();
                 valor = s.Pop();
-                ModificaValor(nombre, valor);
-            }
-            else
-            {
-                throw new Error("Operador de asignación no reconocido: " + getContenido(), log);
             }
             ModificaValor(nombre, valor);
             match(";");
@@ -626,7 +681,7 @@ namespace Semantica
         {
             if (getClasificacion() == Tipos.Numero)
             {
-                s.Push(ValorVariable(getContenido()));
+                s.Push(float.Parse(getContenido()));
                 match(Tipos.Numero);
             }
             else if (getClasificacion() == Tipos.Identificador)

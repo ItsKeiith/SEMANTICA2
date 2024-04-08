@@ -12,13 +12,13 @@ void main()
     x*=2;
     x/=(y-6);
     printf("\nValor de altura = ");
-    scanf(&altura);
+    scanf("",&altura);
 
     for (i = 1; i<=altura; i++)
     {
         for (j = 1; j<=i; j++)
         {
-            printf(j);
+            printf("%f", j);
         }
         printf("\n");
     }
@@ -35,7 +35,7 @@ void main()
         j = 1;
         while (j<=i)
         { 
-            printf(j);
+            printf("%f", j);
             j++;
         }
         printf("\n");

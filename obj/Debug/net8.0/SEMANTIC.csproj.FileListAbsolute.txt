@@ -40,3 +40,4 @@ C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\refint\SEMANTI
 C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\SEMANTIC.pdb
 C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\SEMANTIC.genruntimeconfig.cache
 C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\ref\SEMANTIC.dll
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\SEMANTIC.sourcelink.json
