@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Semantica
 {
@@ -13,6 +14,7 @@ namespace Semantica
         protected int linea;
         protected StreamReader archivo;
         protected StreamWriter log;
+        protected StreamWriter asm;
         protected int ccount;
         int[,] TRAND =
         {
@@ -59,17 +61,34 @@ namespace Semantica
         {
             archivo = new StreamReader("prueba.cpp");
             log = new StreamWriter("prueba.log");
+            asm = new StreamWriter("prueba.asm");//this
+            asm.AutoFlush = true;
             log.AutoFlush = true;
-            linea = 1;
-            ccount = 0;
+            log.WriteLine("Analizador Lexico");
+            log.WriteLine("Autor: Kevin Hernández Cuestas");
+            asm.WriteLine(";Analizador Lexico");
+            asm.WriteLine(";Autor: Kevin Hernández Cuestas");
+            if(!File.Exists("prueba.cpp"))
+            {
+                throw new Error("El archivo prueba.cpp no existe", log);
+            }
+            archivo= new StreamReader("prueba.cpp");
         }
         public Lexico(string nombre)
         {
+            log = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ":log");
+            log.AutoFlush= true;
+            asm = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".asm");
+            asm.AutoFlush = true;
+            log.WriteLine("Analizador Lexico");
+            log.WriteLine("Autor: Kevin Hernández Cuestas");
+            asm.WriteLine(";Analizador Lexico");
+            asm.WriteLine(";Autor: Kevin Hernández Cuestas");
+            if(!File.Exists(nombre))
+            {
+                throw new Error("El archivo " + nombre + " no existe", log);
+            }
             archivo = new StreamReader(nombre);
-            log = new StreamWriter("prueba.log");
-            log.AutoFlush = true;
-            linea = 1;
-            ccount = 0;
         }
         public void Dispose()
         {

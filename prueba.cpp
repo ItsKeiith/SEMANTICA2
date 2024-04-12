@@ -5,12 +5,6 @@ float x,y;
 
 void main()
 {
-    y = 10;
-    x = (3 + 5) * 8 - (10 - 4) / 2; // = 61
-    x--;
-    x+=40;
-    x*=2;
-    x/=(y-6);
     printf("\nValor de altura = ");
     scanf("",&altura);
 
@@ -18,7 +12,14 @@ void main()
     {
         for (j = 1; j<=i; j++)
         {
-            printf("%f", j);
+            if (j%2==0)
+			{
+				printf("*");
+			}
+			else
+			{
+				printf("-");
+			}
         }
         printf("\n");
     }
@@ -30,16 +31,25 @@ void main()
     }
     while (i<altura*2);
     printf("\n");
-    for (i = 1; i<=altura; i++)
+   /* for (i = altura; i>=0; i--)
     {
+        
         j = 1;
         while (j<=i)
         { 
-            printf("%f", j);
+			if (j%2==0)
+			{
+				printf("*");
+			}
+			else
+			{
+				printf("-");
+			}
             j++;
         }
         printf("\n");
     }
+    */
     i = 0;
     do
     {
@@ -49,3 +59,4 @@ void main()
     while (i<altura*2);
     printf("\n");
 }
+
