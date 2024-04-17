@@ -1,2 +1,51 @@
 ;Analizador Lexico
 ;Autor: Kevin Hernández Cuestas
+org 100
+MOV AX, 3
+PUSH AX
+MOV AX, 5
+PUSH AX
+POP bX
+POP aX
+ADD AX,BX
+POP AX
+MOV AX, 8
+PUSH AX
+POP BX
+POP AX
+MUL BX
+PUSH AX
+MOV AX, 10
+PUSH AX
+MOV AX, 4
+PUSH AX
+POP bX
+POP aX
+SUB AX,BX
+POP AX
+MOV AX, 2
+PUSH AX
+POP BX
+POP AX
+DIV BX
+PUSH BX
+POP bX
+POP aX
+SUB AX,BX
+POP AX
+POP AX
+MOX radio
+MOV AX, radio
+PUSH AX
+MOV AX, 10
+PUSH AX
+POP BX
+POP AX
+CMP AX, BX
+JE etiquetaIF1
+MOV AX, 3.1416
+PUSH AX
+POP AX
+MOX pi
+ret
+;Variables: 
