@@ -21,6 +21,13 @@ main = Identificador
 ( = Caracter
 ) = Caracter
 { = Inicio
+if = reservada
+( = Caracter
+1 = Numero
+== = OperadorRelacional
+1 = Numero
+) = Caracter
+{ = Inicio
 radio = Identificador
 = = Asignacion
 ( = Caracter
@@ -42,18 +49,30 @@ radio = Identificador
 if = reservada
 ( = Caracter
 radio = Identificador
->= = OperadorRelacional
+< = OperadorRelacional
 10 = Numero
 ) = Caracter
 { = Inicio
+do = reservada
+{ = Inicio
 pi = Identificador
 = = Asignacion
-3.1416 = Numero
+pi = Identificador
++ = OperadorTermino
+1 = Numero
+; = FinSentencia
+} = Fin
+while = reservada
+( = Caracter
+pi = Identificador
+> = OperadorRelacional
+10 = Numero
+) = Caracter
 ; = FinSentencia
 } = Fin
 } = Fin
 Variables:
 -------------
 x = Char = 0
-radio = Int = 61
-pi = Float = 3.1416
+radio = Int = 0
+pi = Float = 1

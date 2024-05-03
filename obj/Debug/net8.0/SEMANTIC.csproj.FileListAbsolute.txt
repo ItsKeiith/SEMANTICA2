@@ -41,3 +41,18 @@ C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\SEMANTIC.pdb
 C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\SEMANTIC.genruntimeconfig.cache
 C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\ref\SEMANTIC.dll
 C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA2\obj\Debug\net8.0\SEMANTIC.sourcelink.json
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.AssemblyInfoInputs.cache
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.AssemblyInfo.cs
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.csproj.CoreCompileInputs.cache
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.sourcelink.json
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.dll
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\refint\SEMANTIC.dll
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.pdb
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\bin\Debug\net8.0\SEMANTIC.exe
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\bin\Debug\net8.0\SEMANTIC.deps.json
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\bin\Debug\net8.0\SEMANTIC.runtimeconfig.json
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\bin\Debug\net8.0\SEMANTIC.dll
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\bin\Debug\net8.0\SEMANTIC.pdb
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\SEMANTIC.genruntimeconfig.cache
+C:\Users\kev77\Documents\ITQ\Data VSC\SEMANTICA ENSAMBLADOR\obj\Debug\net8.0\ref\SEMANTIC.dll

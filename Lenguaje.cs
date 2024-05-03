@@ -6,10 +6,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
+using static Semantica.Variable;
 /*
     Requerimento 1: Colocar el tipo de dato en asm dependiendo del tipo de
     dato de la variable
     Requerimiento 2: crear las operaciones en asignacion
+    Requerimiento 3: printf
+    Requerimiento 4: scanf
+    Requerimiento 5: do
+    Requerimiento 6: while
 */
 namespace Semantica
 {
@@ -18,17 +23,19 @@ namespace Semantica
         List<Variable> variables;
         Stack<float> s;
         int countIF;
+        int countDO;
         public Lenguaje()
         {
             s = new Stack<float>();
             variables = new List<Variable>();
-            countIF = 0;
+            countIF = countDO = 0;
+
         }
         public Lenguaje(string nombre) : base(nombre)
         {
             s = new Stack<float>();
             variables = new List<Variable>();
-            countIF = 0;
+            countIF = countDO = 0;
         }
         //Programa  -> Librerias? Variables? Main
         public void Programa()
@@ -41,7 +48,7 @@ namespace Semantica
             {
                 Variables();
             }
-            asm.WriteLine("org 100");
+            asm.WriteLine("org 100h");
             Main();
             asm.WriteLine("ret");
             ImprimeVariables();
@@ -71,13 +78,31 @@ namespace Semantica
         private void ImprimeVariables()
         {
             log.WriteLine("Variables:");
-            asm.WriteLine(";Variables: ");
+            asm.WriteLine("; Variables: ");
             log.WriteLine("-------------");
             foreach (Variable v in variables)
             {
                 log.WriteLine(v.getNombre() + " = " + v.getTipo() + " = " + v.getValor());
+                TipoDato tipo = v.getTipo();
+                if (tipo == TipoDato.Int)
+                {
+                    asm.WriteLine(v.getNombre() + " db 0");
+                }
+                else if (tipo == TipoDato.Float)
+                {
+                    asm.WriteLine(v.getNombre() + " dq 0");
+                }
+                else if (tipo == TipoDato.Char)
+                {
+                    asm.WriteLine(v.getNombre() + " dd 0");
+                }
+                else
+                {
+                }
             }
         }
+
+
         private void ModificaValor(string nombre, float nuevoValor)
         {
             foreach (Variable v in variables)
@@ -320,10 +345,12 @@ namespace Semantica
                 {
                     case "++":
                         match("++");
+                        asm.WriteLine("INC " + nombre);
                         valor++;
                         break;
                     case "--":
                         match("--");
+                        asm.WriteLine("DEC " + nombre);
                         valor--;
                         break;
                     case "+=":
@@ -344,8 +371,8 @@ namespace Semantica
                             asm.WriteLine("POP AX");
                             valorExpresion = s.Pop();
                         }
+                        asm.WriteLine("ADD " + nombre + ", " + valorExpresion);
                         valor += valorExpresion;
-
                         break;
                     case "-=":
                         if (getClasificacion() == Tipos.Numero)
@@ -364,6 +391,7 @@ namespace Semantica
                             asm.WriteLine("POP AX");
                             valorExpresion = s.Pop();
                         }
+                        asm.WriteLine("SUB " + nombre + ", " + valorExpresion);
                         valor -= valorExpresion;
                         break;
                 }
@@ -392,6 +420,7 @@ namespace Semantica
                             asm.WriteLine("POP AX");
                             valorExpresion = s.Pop();
                         }
+                        asm.WriteLine("IMUL " + nombre + ", " + valorExpresion);
                         valor *= valorExpresion;
                         break;
                     case "/=":
@@ -412,8 +441,10 @@ namespace Semantica
                             asm.WriteLine("POP AX");
                             valorExpresion = s.Pop();
                         }
+                        asm.WriteLine("IDIV " + nombre + ", " + valorExpresion);
                         valor /= valorExpresion;
                         break;
+
                     case "%=":
                         match(Tipos.IncrementoFactor);
                         if (getClasificacion() == Tipos.Numero)
@@ -432,6 +463,10 @@ namespace Semantica
                             asm.WriteLine("POP AX");
                             valorExpresion = s.Pop();
                         }
+                        asm.WriteLine("MOV AX, " + nombre);
+                        asm.WriteLine("MOV DX, 0");
+                        asm.WriteLine("DIV " + valorExpresion);
+                        asm.WriteLine("MOV " + nombre + ", DX");
                         valor %= valorExpresion;
                         break;
                 }
@@ -441,9 +476,10 @@ namespace Semantica
                 match("=");
                 Expresion();
                 asm.WriteLine("POP AX");
+                asm.WriteLine("MOV " + nombre + ", AX");
                 valor = s.Pop();
             }
-            asm.WriteLine("MOX " + nombre);
+            asm.WriteLine("MOV " + nombre);
             if (evalua)
             {
                 ModificaValor(nombre, valor);
@@ -553,37 +589,60 @@ namespace Semantica
         //Do -> do bloqueInstrucciones | Intruccion while(Condicion);
         private void Do(bool evalua)
         {
+            string etiqueta = "etiquetaDO" + (++countDO);
+            asm.WriteLine(etiqueta + ":");
             match("do");
-            int lineatmp = linea;
-            bool evaluaDo = true;
-            do
+            if (getContenido() == "{")
             {
-                int counttmp = ccount - 1;
-                if (getContenido() == "{")
-                {
-                    BloqueInstrucciones(evalua && evaluaDo);
-                }
-                else
-                {
-                    Instruccion(evalua && evaluaDo);
-                }
-
-                match("while");
-                match("(");
-                evaluaDo = Condicion("") && evalua;
-                match(")");
-                match(";");
-
-                if (evalua && evaluaDo)
-                {
-                    ccount = counttmp;
-                    linea = lineatmp;
-                    archivo.DiscardBufferedData();
-                    archivo.BaseStream.Seek(ccount, SeekOrigin.Begin);
-                    nextToken();
-                }
-            } while (evalua && evaluaDo);
+                BloqueInstrucciones(evalua);
+            }
+            else
+            {
+                Instruccion(evalua);
+            }
+            match("while");
+            match("(");
+            bool EvaluaDo = Condicion(etiqueta) && evalua;
+            asm.WriteLine("CMP BX, 10");
+            match(")");
+            match(";");
         }
+        /* private void Do(bool evalua)
+         {
+             match("do");
+             string etiqueta = "etiquetaDO" + (++countDO);
+             asm.WriteLine(etiqueta+":");
+             int lineatmp = linea;
+             bool evaluaDo = true;
+             do
+             {
+                 int counttmp = ccount - 1;
+                 if (getContenido() == "{")
+                 {
+                     BloqueInstrucciones(evalua && evaluaDo);
+                 }
+                 else
+                 {
+                     Instruccion(evalua && evaluaDo);
+                 }
+
+                 match("while");
+                 match("(");
+                 evaluaDo = Condicion(etiqueta) && evalua;
+                 match(")");
+                 match(";");
+
+                 if (evalua && evaluaDo)
+                 {
+                     ccount = counttmp;
+                     linea = lineatmp;
+                     archivo.DiscardBufferedData();
+                     archivo.BaseStream.Seek(ccount, SeekOrigin.Begin);
+                     nextToken();
+                 }
+             } while (evalua && evaluaDo);
+         }
+         */
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Instruccion 
         private void For(bool evalua)
         {
@@ -665,9 +724,9 @@ namespace Semantica
                 match(Tipos.OperadorTermino);
                 Termino();
                 float N2 = s.Pop();
-                asm.WriteLine("POP bX");
+                asm.WriteLine("POP BX");
                 float N1 = s.Pop();
-                asm.WriteLine("POP aX");
+                asm.WriteLine("POP AX");
                 switch (operador)
                 {
                     case "+":

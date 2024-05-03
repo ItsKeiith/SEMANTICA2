@@ -1,12 +1,20 @@
 ;Analizador Lexico
 ;Autor: Kevin Hernández Cuestas
-org 100
+org 100h
+MOV AX, 1
+PUSH AX
+MOV AX, 1
+PUSH AX
+POP BX
+POP AX
+CMP AX, BX
+JE etiquetaIF1
 MOV AX, 3
 PUSH AX
 MOV AX, 5
 PUSH AX
-POP bX
-POP aX
+POP BX
+POP AX
 ADD AX,BX
 POP AX
 MOV AX, 8
@@ -19,8 +27,8 @@ MOV AX, 10
 PUSH AX
 MOV AX, 4
 PUSH AX
-POP bX
-POP aX
+POP BX
+POP AX
 SUB AX,BX
 POP AX
 MOV AX, 2
@@ -29,12 +37,13 @@ POP BX
 POP AX
 DIV BX
 PUSH BX
-POP bX
-POP aX
+POP BX
+POP AX
 SUB AX,BX
 POP AX
 POP AX
-MOX radio
+MOV radio, AX
+MOV radio
 MOV AX, radio
 PUSH AX
 MOV AX, 10
@@ -42,10 +51,30 @@ PUSH AX
 POP BX
 POP AX
 CMP AX, BX
-JE etiquetaIF1
-MOV AX, 3.1416
+JE etiquetaIF2
+etiquetaDO1:
+MOV AX, pi
 PUSH AX
+MOV AX, 1
+PUSH AX
+POP BX
 POP AX
-MOX pi
+ADD AX,BX
+POP AX
+POP AX
+MOV pi, AX
+MOV pi
+MOV AX, pi
+PUSH AX
+MOV AX, 10
+PUSH AX
+POP BX
+POP AX
+CMP AX, BX
+JE etiquetaDO1
+CMP BX, 10
 ret
-;Variables: 
+; Variables: 
+x dd 0
+radio db 0
+pi dq 0

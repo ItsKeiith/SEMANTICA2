@@ -6,10 +6,17 @@ float pi;
 
 void main()
 {
-   radio = (3+5)*8-(10-4)/2;
-   if(radio<10)
+   if (1 == 1)
    {
-   pi=3.1416;
+      radio = (3 + 5) * 8 - (10 - 4) / 2;
+      if (radio < 10)
+      {
+         do
+         {
+            pi = pi + 1;
+         }
+         while (pi > 10);
+      }
+      // pi = 10
+   }
 }
-}
-
