@@ -53,20 +53,9 @@ radio = Identificador
 10 = Numero
 ) = Caracter
 { = Inicio
-do = reservada
-{ = Inicio
-pi = Identificador
-= = Asignacion
-pi = Identificador
-+ = OperadorTermino
-1 = Numero
-; = FinSentencia
-} = Fin
-while = reservada
+printf = Identificador
 ( = Caracter
-pi = Identificador
-> = OperadorRelacional
-10 = Numero
+"ola" = Cadena
 ) = Caracter
 ; = FinSentencia
 } = Fin
@@ -75,4 +64,4 @@ Variables:
 -------------
 x = Char = 0
 radio = Int = 0
-pi = Float = 1
+pi = Float = 0

@@ -11,11 +11,7 @@ void main()
       radio = (3 + 5) * 8 - (10 - 4) / 2;
       if (radio < 10)
       {
-         do
-         {
-            pi = pi + 1;
-         }
-         while (pi > 10);
+         printf("ola");
       }
       // pi = 10
    }

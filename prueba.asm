@@ -43,7 +43,9 @@ SUB AX,BX
 POP AX
 POP AX
 MOV radio, AX
-MOV radio
+JMP etiquetaelse1
+etiquetaIF1:
+etiquetaelse1:
 MOV AX, radio
 PUSH AX
 MOV AX, 10
@@ -52,27 +54,9 @@ POP BX
 POP AX
 CMP AX, BX
 JE etiquetaIF2
-etiquetaDO1:
-MOV AX, pi
-PUSH AX
-MOV AX, 1
-PUSH AX
-POP BX
-POP AX
-ADD AX,BX
-POP AX
-POP AX
-MOV pi, AX
-MOV pi
-MOV AX, pi
-PUSH AX
-MOV AX, 10
-PUSH AX
-POP BX
-POP AX
-CMP AX, BX
-JE etiquetaDO1
-CMP BX, 10
+JMP etiquetaelse2
+etiquetaIF2:
+etiquetaelse2:
 ret
 ; Variables: 
 x dd 0

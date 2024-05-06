@@ -23,19 +23,21 @@ namespace Semantica
         List<Variable> variables;
         Stack<float> s;
         int countIF;
+        int countWHILE;
+
         int countDO;
         public Lenguaje()
         {
             s = new Stack<float>();
             variables = new List<Variable>();
-            countIF = countDO = 0;
+            countIF = countDO = countWHILE = 0;
 
         }
         public Lenguaje(string nombre) : base(nombre)
         {
             s = new Stack<float>();
             variables = new List<Variable>();
-            countIF = countDO = 0;
+            countIF = countDO = countWHILE = 0;
         }
         //Programa  -> Librerias? Variables? Main
         public void Programa()
@@ -479,7 +481,7 @@ namespace Semantica
                 asm.WriteLine("MOV " + nombre + ", AX");
                 valor = s.Pop();
             }
-            asm.WriteLine("MOV " + nombre);
+            //asm.WriteLine("MOV " + nombre);
             if (evalua)
             {
                 ModificaValor(nombre, valor);
@@ -494,9 +496,11 @@ namespace Semantica
             match("if");
             match("(");
             string etiqueta = "etiquetaIF" + (++countIF);
+            string etiquetaelse = "etiquetaelse" + countIF;
             bool evalua = Condicion(etiqueta) && evaluaif;
             match(")");
             match("{");
+
 
             if (getContenido() == "{")
             {
@@ -506,32 +510,23 @@ namespace Semantica
             {
                 Instruccion(evalua);
             }
+            asm.WriteLine("JMP "+ etiquetaelse);
+            asm.WriteLine(etiqueta + ":");
             if (getContenido() == "else")
             {
                 match("else");
-                if (!evalua)
+                if (getContenido() == "{")
                 {
-                    if (getContenido() == "{")
-                    {
-                        BloqueInstrucciones(!evalua);
-                    }
-                    else
-                    {
-                        Instruccion(!evalua);
-                    }
-                }
-                else
+                    BloqueInstrucciones(evalua);
+                }   
+                else 
                 {
-                    if (getContenido() == "{")
-                    {
-                        BloqueInstrucciones(evaluaif);
-                    }
-                    else
-                    {
-                        Instruccion(evaluaif);
-                    }
+                    Instruccion(!evalua);
                 }
+
             }
+            asm.WriteLine(etiquetaelse + ":");
+            
         }
         //Condicion -> Expresion operadoRelacional Expresion
         private bool Condicion(string etiqueta)
@@ -558,12 +553,13 @@ namespace Semantica
         //While -> while(Condicion) bloqueInstrucciones | Instruccion
         private void While(bool evalua)
         {
+            string etiquetawhile = "etiquetaWHILE" + (++countWHILE);
             match("while");
+            asm.WriteLine(etiquetawhile + ":");
             match("(");
             int counttmp = ccount - 1;
             int lineatmp = linea;
             bool evaluaWhile = true;
-
             do
             {
                 evaluaWhile = Condicion("") && evalua;
@@ -585,6 +581,7 @@ namespace Semantica
                     nextToken();
                 }
             } while (evaluaWhile);
+            asm.WriteLine("JE " + etiquetawhile);
         }
         //Do -> do bloqueInstrucciones | Intruccion while(Condicion);
         private void Do(bool evalua)
@@ -607,42 +604,6 @@ namespace Semantica
             match(")");
             match(";");
         }
-        /* private void Do(bool evalua)
-         {
-             match("do");
-             string etiqueta = "etiquetaDO" + (++countDO);
-             asm.WriteLine(etiqueta+":");
-             int lineatmp = linea;
-             bool evaluaDo = true;
-             do
-             {
-                 int counttmp = ccount - 1;
-                 if (getContenido() == "{")
-                 {
-                     BloqueInstrucciones(evalua && evaluaDo);
-                 }
-                 else
-                 {
-                     Instruccion(evalua && evaluaDo);
-                 }
-
-                 match("while");
-                 match("(");
-                 evaluaDo = Condicion(etiqueta) && evalua;
-                 match(")");
-                 match(";");
-
-                 if (evalua && evaluaDo)
-                 {
-                     ccount = counttmp;
-                     linea = lineatmp;
-                     archivo.DiscardBufferedData();
-                     archivo.BaseStream.Seek(ccount, SeekOrigin.Begin);
-                     nextToken();
-                 }
-             } while (evalua && evaluaDo);
-         }
-         */
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Instruccion 
         private void For(bool evalua)
         {
